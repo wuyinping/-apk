@@ -1,0 +1,44 @@
+import os,sys,time
+def uninstall(pkgname):
+    print("begin uninstall() ...")
+    os.popen("adb wait-for-device")
+    out=os.popen("adb shell pm list packages -3").readlines()
+    if out:
+        for p in out:
+            pkg=p.split(":")[-1].splitlines()[0]
+            #print (pkg)
+            if pkg==pkgname:
+                os.popen("adb uninstall "+pkgname)
+                print("unintall successful...")
+                return True
+        return False
+    print("end uninstall()...")
+def install(apk):
+    print("begin install()...")
+    os.popen("adb wait-for-device")
+    out=os.popen("adb install " +apk)
+    time.sleep(3)
+    if out:
+        print("install successful...")
+        return True
+    else:
+        print("end install(),fail...")
+        return False
+
+def getApkInfo():
+    cmd = u'aapt dump badging '
+    path = input(u'请拖入apk:')
+    content = os.popen(cmd + path)
+    pkgname=cosntent.readlines()[0].split("=")[1].split(" ")[0].strip('\'')
+    #print(pkgname)
+    return (path,pkgname)
+     
+if __name__=="__main__":
+    
+    (apk,pkgname)=getApkInfo()
+    #print (pkgname)
+    uninstall(pkgname)
+    install(apk)
+    print("done...")
+   
+    
